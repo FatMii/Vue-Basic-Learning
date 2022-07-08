@@ -1,2 +1,2 @@
-./code.zip
-./ziliao.zip
+code.zip
+ziliao.zip

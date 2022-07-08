@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>一个重要的内置关系</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 
+				1.一个重要的内置关系：VueComponent.prototype.__proto__ === Vue.prototype
+				   备注:Vue.extend({..})可以生成一个组件,这个返回值本质上是一个VueComponent构造函数,
+				        每次使用<school />就是调用这个构造函数去创建一个组件实例,一个组件实例一般可以简称vc
+						 Vue强制把这个VueComponent的原型对象上的__proto__指向Vue.prototype
+						这样的好处是,每一个组件实例vc都可以访问vm上的属性或方法
+
+				2.为什么要有这个关系：让组件实例对象（vc）可以访问到 Vue原型上的属性、方法。
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<school></school>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		Vue.prototype.x = 99
+
+		//定义school组件
+		const school = Vue.extend({
+			name:'school',
+			template:`
+				<div>
+					<h2>学校名称：{{name}}</h2>	
+					<h2>学校地址：{{address}}</h2>	
+					<button @click="showX">点我输出x</button>
+				</div>
+			`,
+			data(){
+				return {
+					name:'尚硅谷',
+					address:'北京'
+				}
+			},
+			methods: {
+				showX(){
+					console.log(this.x)
+				}
+			},
+		})
+
+		//创建一个vm
+		const vm = new Vue({
+			el:'#root',
+			data:{
+				msg:'你好'
+			},
+			components:{school}
+		})
+
+		
+		//定义一个构造函数
+		/* function Demo(){
+			this.a = 1
+			this.b = 2
+		}
+		//创建一个Demo的实例对象
+		const d = new Demo()
+
+		console.log(Demo.prototype) //显示原型属性
+
+		console.log(d.__proto__) //隐式原型属性
+
+		console.log(Demo.prototype === d.__proto__)
+
+		//程序员通过显示原型属性操作原型对象，追加一个x属性，值为99
+		Demo.prototype.x = 99
+
+		console.log('@',d) */
+
+	</script>
+</html>
